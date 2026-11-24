@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: .
+      target: development
+    image: backend:dev
+    ports:
+      - '5001:3000'
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      # - DATABASE_URL=mongodb://nestjs_mongodb:27017/nest-db
+    depends_on:
+      - mongo
+    command: npm run start:dev
+
+  mongo:
+    image: mongo:8
+    container_name: nestjs_mongodb
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  mongodata:
+    driver: local

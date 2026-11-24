@@ -1,0 +1,60 @@
+services:
+  backend:
+    build:
+      context: .
+      target: production
+
+    image: backend:production
+    container_name: nestjs_backend
+    restart: unless-stopped
+
+    env_file:
+      - .env.production
+
+    # No ports mapping
+    # No host port exposure
+
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+    networks:
+      - app-network
+
+    init: true
+    stop_grace_period: 30s
+
+  mongo:
+    image: mongo:8.3
+    container_name: nestjs_mongodb
+    restart: unless-stopped
+
+    env_file:
+      - .env.mongo
+
+    volumes:
+      - mongodata:/data/db
+
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'mongosh --quiet -u $$MONGO_INITDB_ROOT_USERNAME -p $$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin --eval "db.adminCommand(''ping'').ok"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+    networks:
+      - app-network
+
+    stop_grace_period: 60s
+
+volumes:
+  mongodata:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
