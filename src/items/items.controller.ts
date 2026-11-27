@@ -10,6 +10,7 @@ import {
 import { CreateItemDto } from './dto/create-item.dto.js';
 import { Item } from './iterfaces/item.interfaces.js';
 import { ItemsService } from './items.service.js';
+import { UppercasePipe } from '../uppercase/uppercase.pipe.js';
 
 @Controller('items')
 export class ItemsController {
@@ -37,5 +38,10 @@ export class ItemsController {
   @Patch(':id')
   update(@Body() updateItemDto: CreateItemDto, @Param('id') id: string) {
     return this.itemServices.update(id, updateItemDto);
+  }
+
+  @Post('sample/:sample')
+  upcase(@Param('sample', UppercasePipe) sample: string) {
+    return sample;
   }
 }

@@ -7,10 +7,10 @@ import config from './config/keys.js';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(config.mongoURI),
-    // MongooseModule.forRoot(
-    //   process.env.DATABASE_URL || 'mongodb://localhost:27017/nest-db',
-    // ),
+    // MongooseModule.forRoot(config.mongoURI),
+    MongooseModule.forRoot(
+      process.env.DATABASE_URL || 'mongodb://localhost:27017/nest-db',
+    ),
     ItemsModule,
   ],
 
